@@ -217,6 +217,38 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
       Your expectimax agent (question 4)
     """
 
+    def maxValue(self, depth, gameState: GameState):
+        if depth == self.depth or gameState.isLose() or gameState.isWin():
+            return self.evaluationFunction(gameState)
+
+        bestScore = -float('inf')
+        legalActions = gameState.getLegalActions(0)
+        for action in legalActions:
+            successor = gameState.generateSuccessor(0, action)
+            score = self.minValue(depth, successor, 1)
+            bestScore = max(bestScore, score)
+        return bestScore
+
+    def minValue(self, depth, gameState: GameState, index):
+        if depth == self.depth or gameState.isLose() or gameState.isWin():
+            return self.evaluationFunction(gameState)
+
+        legalActions = gameState.getLegalActions(index)
+
+        if index == gameState.getNumAgents() - 1:
+            expectedValue = 0.0
+            for action in legalActions:
+                successor = gameState.generateSuccessor(index, action)
+                expectedValue += self.maxValue(depth + 1, successor)
+            return expectedValue / len(legalActions)
+        else:
+
+            bestMin = float('inf')
+            for action in legalActions:
+                successor = gameState.generateSuccessor(index, action)
+                score = self.minValue(depth, successor, index + 1)
+                bestMin = min(bestMin, score)
+            return bestMin
     def getAction(self, gameState: GameState):
         """
         Returns the expectimax action using self.depth and self.evaluationFunction
@@ -225,7 +257,18 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        legalActions = gameState.getLegalActions(0)
+        bestAction = None
+        bestScore = -float('inf')
+
+        for action in legalActions:
+            successor = gameState.generateSuccessor(0, action)
+            score = self.minValue(0, successor, 1)
+
+            if score > bestScore:
+                bestScore = score
+                bestAction = action
+        return bestAction
 
 def betterEvaluationFunction(currentGameState: GameState):
     """
