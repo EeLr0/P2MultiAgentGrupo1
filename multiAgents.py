@@ -203,7 +203,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     """
     Your minimax agent with alpha-beta pruning (question 3)
     """
-   def maxValue (self,depth, gameState:GameState, alpha, beta):
+    def maxValue (self,depth, gameState:GameState, alpha, beta):
         if depth == self.depth or gameState.isLose() or gameState.isWin():
             return self.evaluationFunction(gameState)
         
@@ -324,7 +324,7 @@ def betterEvaluationFunction(currentGameState: GameState):
 
     DESCRIPTION: <write something here so we know what you did>
     """
-   if currentGameState.isWin():
+    if currentGameState.isWin():
         return float('inf')
     if currentGameState.isLose():
         return -float('inf')
